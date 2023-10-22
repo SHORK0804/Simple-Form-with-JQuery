@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Form nhập thông tin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <style>
+    #myForm {
+      margin: 10px;
+      height: 100%;
+      background-color: rgb(8, 233, 64);
+    }
+
+    #savedData {
+      width: auto;
+      width: 50%;
+      height: 100%;
+      margin: 10px;
+      background-color: rgb(224, 248, 8);
+      display: flex;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="row">
+    <div class="col-md-6">
+      <form id="myForm">
+        <label for="name">Họ và tên:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="age">Tuổi:</label>
+        <select id="age" name="age" required>
+          <option value="">-- Chọn tuổi --</option>
+        </select><br>
+
+        <label>Giới tính:</label>
+        <input type="radio" id="genderMale" name="gender" required value="Nam"> <label for="genderMale">Nam</label>
+        <input type="radio" id="genderFemale" name="gender" required value="Nữ"> <label
+          for="genderFemale">Nữ</label><br>
+
+        <label>Sở thích:</label><br>
+        <input type="checkbox" id="hobbyGame" name="hobby" value="Game"> <label for="hobbyGame">Game</label><br>
+        <input type="checkbox" id="hobbySport" name="hobby" value="Thể thao"> <label for="hobbySport">Thể
+          thao</label><br>
+        <input type="checkbox" id="hobbyMusic" name="hobby" value="Âm nhạc"> <label for="hobbyMusic">Âm nhạc</label><br>
+
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
+
+        <!--Kiểm tra xem có ít nhất 1 hobby được chọn-->
+        <input type="hidden" id="hobbyHidden" name="hobbyHidden">
+      </form>
+    </div>
+    <div class="col-md-6">
+      <div id="savedData"></div>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      var ageSelect = $("#age");
+
+      // Tạo các tùy chọn cho tuổi từ 10 đến 100
+      for (var i = 10; i <= 100; i++) {
+        var option = $("<option>").val(i).text(i);
+        ageSelect.append(option);
+      }
+
+      $("#myForm").submit(function (event) {
+        event.preventDefault(); // Ngăn chặn việc gửi form đi
+
+        // Lấy giá trị từ các trường input
+        var name = $("#name").val();
+        var age = $("#age").val();
+
+        // Lấy giá trị của giới tính
+        var gender = $("input[name='gender']:checked").val();
+
+        // Lấy giá trị của sở thích
+        var hobbies = [];
+        $("input[name='hobby']:checked").each(function () {
+          hobbies.push($(this).val());
+        });
+
+        // Kiểm tra xem có ít nhất một sở thích được chọn hay không
+        if (hobbies.length === 0) {
+          alert("Vui lòng chọn ít nhất một sở thích.");
+          return;
+        }
+
+
+        /* Đây là code JS để in ra kết quả trong console--bước này chỉ để kiểm tra dữ liệu in ra trong console
+        console.log("Họ và tên: " + name);
+        console.log("Tuổi: " + age);
+        console.log("Giới tính: " + gender);
+        console.log("Sở thích: " + hobbies.join(", "));
+        */
+
+
+
+        // Tạo button chứa họ tên đã nhập
+        var button = $("<button>").text(name);
+        button.click(function () {
+          // Đặt lại giá trị của các trường input trong form đầu tiên
+          $("#name").val(name);
+          $("#age").val(age);
+
+          // Đặt lại giá trị của trường giới tính
+          $("input[name='gender']").each(function () {
+            $(this).prop("checked", $(this).val() === gender);
+          });
+
+          // Đặt lại giá trị của checkbox sở thích
+          $("input[name='hobby']").each(function () {
+            $(this).prop("checked", hobbies.includes($(this).val()));
+          });
+        });
+
+        // Thêm button vào ô lưu trữ
+        $("#savedData").append(button);
+
+        // Reset form
+        $("#myForm")[0].reset();
+      });
+    });
+  </script>
+</body>
+
+</html>
